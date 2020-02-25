@@ -36,9 +36,9 @@ namespace WebApiMod7.Controllers
         {
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             // Método para crear el usuario en la BD:
-            //var result = await _userManager.CreateAsync(user, model.Password);
-            var result = true;
-            if (result)
+            var result = await _userManager.CreateAsync(user, model.Password);
+            //var result = true;
+            if (result.Succeeded)
             {
                 return BuildToken(model, new List<string>());
             }
@@ -53,9 +53,9 @@ namespace WebApiMod7.Controllers
         public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo userInfo)
         {
             // Validación del password y métodos de Sign In
-            //var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
-            var result = true;
-            if (result)
+            var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
+            //var result = true;
+            if (result.Succeeded)
             {
                 // Metodo para traer el usuario de BD:
                 var usuario = await _userManager.FindByEmailAsync(userInfo.Email);
